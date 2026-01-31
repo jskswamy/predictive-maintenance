@@ -141,7 +141,7 @@ def main():
 
     # Find deployment directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(os.path.dirname(script_dir))
+    project_root = os.path.dirname(script_dir)  # model_building/ -> project root
     deployment_dir = os.path.join(project_root, DEPLOYMENT_DIR)
 
     if not os.path.exists(deployment_dir):

@@ -53,7 +53,7 @@ def main():
 
     # Find data file
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(os.path.dirname(script_dir))
+    project_root = os.path.dirname(script_dir)  # model_building/ -> project root
     data_path = os.path.join(project_root, DATA_PATH)
 
     if not os.path.exists(data_path):
