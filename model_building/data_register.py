@@ -35,6 +35,18 @@ def upload_dataset(data_path: str, repo_id: str, token: str) -> None:
     df = pd.read_csv(data_path)
     print(f"Loaded {len(df)} rows with columns: {list(df.columns)}")
 
+    # Standardize column names for consistency
+    column_mapping = {
+        "Engine rpm": "Engine RPM",
+        "Lub oil pressure": "Lub Oil Pressure",
+        "Fuel pressure": "Fuel Pressure",
+        "Coolant pressure": "Coolant Pressure",
+        "lub oil temp": "Lub Oil Temp",
+        "Coolant temp": "Coolant Temp",
+    }
+    df = df.rename(columns=column_mapping)
+    print(f"Standardized column names: {list(df.columns)}")
+
     # Create HuggingFace Dataset
     dataset = Dataset.from_pandas(df)
     print(f"Created dataset with {len(dataset)} samples")
