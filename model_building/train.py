@@ -21,10 +21,10 @@ from huggingface_hub import HfApi, upload_file
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.metrics import (
     balanced_accuracy_score,
+    fbeta_score,
     precision_score,
     recall_score,
     roc_auc_score,
-    f1_score,
 )
 from sklearn.tree import DecisionTreeClassifier
 
@@ -110,7 +110,7 @@ def find_optimal_threshold(model: AdaBoostClassifier, X_val: pd.DataFrame, y_val
     for threshold in np.arange(0.1, 0.9, 0.01):
         preds = (probas >= threshold).astype(int)
         # F2 weights recall more heavily
-        f2 = f1_score(y_val, preds, beta=2)
+        f2 = fbeta_score(y_val, preds, beta=2)
         if f2 > best_f2:
             best_f2 = f2
             best_threshold = threshold
@@ -141,7 +141,7 @@ def evaluate_model(model: AdaBoostClassifier, X_test: pd.DataFrame, y_test: pd.S
         "roc_auc": roc_auc_score(y_test, probas),
         "recall": recall_score(y_test, predictions),
         "precision": precision_score(y_test, predictions),
-        "f2": f1_score(y_test, predictions, beta=2),
+        "f2": fbeta_score(y_test, predictions, beta=2),
     }
 
     print("Test Metrics:")
