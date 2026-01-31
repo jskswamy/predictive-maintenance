@@ -1,0 +1,94 @@
+name: ML Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.11"
+  HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+jobs:
+  data:
+    name: Data Registration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Register Data
+        run: |
+          python model_building/data_register.py
+
+  prep:
+    name: Data Preparation
+    needs: data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Prepare Data
+        run: |
+          python model_building/prep.py
+
+  train:
+    name: Model Training
+    needs: prep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Train and Evaluate Model
+        run: |
+          python model_building/train.py
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+  deploy:
+    name: Deploy to HuggingFace Spaces
+    needs: train
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install huggingface_hub python-dotenv
+
+      - name: Deploy to Spaces
+        run: |
+          python hosting/hosting.py
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
