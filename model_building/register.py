@@ -18,7 +18,7 @@ load_dotenv()
 
 # Configuration
 HF_TOKEN = os.getenv("HF_TOKEN")
-DATASET_REPO = "jskswamy/predictive-maintenance-data"
+DATASET_REPO = "jskswamy/predictive-maintenance-data-raw"
 DATA_PATH = "data/engine_data.csv"
 
 
