@@ -27,7 +27,7 @@ jobs:
 
       - name: Register Data
         run: |
-          python model_building/data_register.py
+          python model_building/register.py
 
   prep:
     name: Data Preparation

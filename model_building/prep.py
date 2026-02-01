@@ -19,7 +19,8 @@ load_dotenv()
 
 # Configuration
 HF_TOKEN = os.getenv("HF_TOKEN")
-DATASET_REPO = "jskswamy/predictive-maintenance-data"
+SOURCE_REPO = "jskswamy/predictive-maintenance-data-raw"
+DEST_REPO = "jskswamy/predictive-maintenance-data"
 TARGET_COLUMN = "Engine Condition"
 RANDOM_STATE = 42
 TEST_SIZE = 0.15
@@ -128,8 +129,8 @@ def main():
         sys.exit(1)
 
     try:
-        # Load data
-        df = load_data(DATASET_REPO)
+        # Load raw data from source repo
+        df = load_data(SOURCE_REPO)
 
         # Engineer features
         df = engineer_features(df)
@@ -137,8 +138,8 @@ def main():
         # Split data
         train_df, val_df, test_df = split_data(df, TARGET_COLUMN)
 
-        # Upload splits
-        upload_splits(train_df, val_df, test_df, DATASET_REPO, HF_TOKEN)
+        # Upload processed splits to destination repo
+        upload_splits(train_df, val_df, test_df, DEST_REPO, HF_TOKEN)
 
         print("Data preparation complete!")
 
