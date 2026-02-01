@@ -7,9 +7,9 @@ This script is part of the CI/CD pipeline and demonstrates data versioning.
 
 import os
 import sys
+import tempfile
 
 import pandas as pd
-from datasets import Dataset, DatasetDict
 from dotenv import load_dotenv
 from huggingface_hub import HfApi
 
@@ -18,13 +18,13 @@ load_dotenv()
 
 # Configuration
 HF_TOKEN = os.getenv("HF_TOKEN")
-DATASET_REPO = "jskswamy/predictive-maintenance-data-raw"
+DATASET_REPO = "jskswamy/predictive-maintenance-data"
 DATA_PATH = "data/engine_data.csv"
 
 
 def upload_dataset(data_path: str, repo_id: str, token: str) -> None:
     """
-    Upload a CSV dataset to HuggingFace Datasets Hub.
+    Upload a CSV dataset to HuggingFace Datasets Hub as a file.
 
     Args:
         data_path: Path to the CSV file
@@ -47,14 +47,25 @@ def upload_dataset(data_path: str, repo_id: str, token: str) -> None:
     df = df.rename(columns=column_mapping)
     print(f"Standardized column names: {list(df.columns)}")
 
-    # Create HuggingFace Dataset
-    dataset = Dataset.from_pandas(df)
-    print(f"Created dataset with {len(dataset)} samples")
+    # Save standardized data to temporary file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        df.to_csv(f, index=False)
+        temp_path = f.name
 
-    # Upload to HuggingFace
+    # Upload file to HuggingFace using HfApi
     print(f"Uploading to {repo_id}...")
-    dataset.push_to_hub(repo_id, token=token, private=False)
-    print(f"Successfully uploaded dataset to https://huggingface.co/datasets/{repo_id}")
+    api = HfApi()
+    api.upload_file(
+        path_or_fileobj=temp_path,
+        path_in_repo="engine_data.csv",
+        repo_id=repo_id,
+        repo_type="dataset",
+        token=token,
+    )
+    print(f"Successfully uploaded engine_data.csv to https://huggingface.co/datasets/{repo_id}")
+
+    # Clean up temporary file
+    os.unlink(temp_path)
 
 
 def main():

@@ -17,7 +17,7 @@ load_dotenv()
 # Configuration
 HF_TOKEN = os.getenv("HF_TOKEN")
 SPACE_REPO = "jskswamy/predictive-maintenance"
-DEPLOYMENT_DIR = "mlops/deployment"
+DEPLOYMENT_DIR = "deployment"
 
 # Files to upload
 DEPLOYMENT_FILES = [
