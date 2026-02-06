@@ -56,7 +56,7 @@ streamlit run deployment/app.py
 | Recall | 99.78% |
 | Precision | 63.2% |
 | F2 Score | 0.917 |
-| ROC-AUC | 0.998 |
+| ROC-AUC | 0.70 |
 
 **Threshold:** 0.316 (optimized for maximum recall)
 
