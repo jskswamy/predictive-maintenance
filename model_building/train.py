@@ -198,6 +198,19 @@ def save_and_upload_model(
             token=token,
         )
 
+        # Upload model card (README)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        readme_path = os.path.join(script_dir, "MODEL_README.md")
+        if os.path.exists(readme_path):
+            api.upload_file(
+                path_or_fileobj=readme_path,
+                path_in_repo="README.md",
+                repo_id=repo_id,
+                repo_type="model",
+                token=token,
+            )
+            print("Uploaded model card (README.md)")
+
         print(f"Successfully uploaded model to https://huggingface.co/{repo_id}")
 
 

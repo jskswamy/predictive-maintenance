@@ -67,6 +67,20 @@ def upload_dataset(data_path: str, repo_id: str, token: str) -> None:
     # Clean up temporary file
     os.unlink(temp_path)
 
+    # Upload README (dataset card)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    readme_path = os.path.join(project_root, "data", "README.md")
+    if os.path.exists(readme_path):
+        api.upload_file(
+            path_or_fileobj=readme_path,
+            path_in_repo="README.md",
+            repo_id=repo_id,
+            repo_type="dataset",
+            token=token,
+        )
+        print(f"Uploaded dataset card (README.md)")
+
 
 def main():
     """Main entry point."""
