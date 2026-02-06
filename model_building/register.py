@@ -48,7 +48,7 @@ def upload_dataset(data_path: str, repo_id: str, token: str) -> None:
     print(f"Standardized column names: {list(df.columns)}")
 
     # Save standardized data to temporary file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
         df.to_csv(f, index=False)
         temp_path = f.name
 
@@ -62,7 +62,9 @@ def upload_dataset(data_path: str, repo_id: str, token: str) -> None:
         repo_type="dataset",
         token=token,
     )
-    print(f"Successfully uploaded engine_data.csv to https://huggingface.co/datasets/{repo_id}")
+    print(
+        f"Successfully uploaded engine_data.csv to https://huggingface.co/datasets/{repo_id}"
+    )
 
     # Clean up temporary file
     os.unlink(temp_path)

@@ -68,19 +68,25 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     # Domain features
     df["TempDiff"] = df["Lub Oil Temp"] - df["Coolant Temp"]
     df["OilFuelPressureRatio"] = df["Lub Oil Pressure"] / (df["Fuel Pressure"] + eps)
-    df["CoolantOilPressureRatio"] = df["Coolant Pressure"] / (df["Lub Oil Pressure"] + eps)
+    df["CoolantOilPressureRatio"] = df["Coolant Pressure"] / (
+        df["Lub Oil Pressure"] + eps
+    )
     df["OilHealthIndex"] = df["Lub Oil Pressure"] / (df["Lub Oil Temp"] + eps)
     df["CoolantStress"] = df["Coolant Temp"] / (df["Coolant Pressure"] + eps)
     df["OilTempPerRPM"] = df["Lub Oil Temp"] / (df["Engine RPM"] + eps)
     df["CoolantTempPerRPM"] = df["Coolant Temp"] / (df["Engine RPM"] + eps)
-    df["PressureSum"] = df["Lub Oil Pressure"] + df["Fuel Pressure"] + df["Coolant Pressure"]
+    df["PressureSum"] = (
+        df["Lub Oil Pressure"] + df["Fuel Pressure"] + df["Coolant Pressure"]
+    )
     df["TempSum"] = df["Lub Oil Temp"] + df["Coolant Temp"]
 
     print(f"Engineered {len(df.columns)} total features")
     return df
 
 
-def split_data(df: pd.DataFrame, target: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def split_data(
+    df: pd.DataFrame, target: str
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Split data into train/validation/test sets using stratified sampling.
 
@@ -109,18 +115,26 @@ def split_data(df: pd.DataFrame, target: str) -> tuple[pd.DataFrame, pd.DataFram
     val_df = pd.concat([X_val, y_val], axis=1)
     test_df = pd.concat([X_test, y_test], axis=1)
 
-    print(f"Split sizes - Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}")
+    print(
+        f"Split sizes - Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}"
+    )
     return train_df, val_df, test_df
 
 
-def upload_splits(train_df: pd.DataFrame, val_df: pd.DataFrame, test_df: pd.DataFrame, repo_id: str, token: str) -> None:
+def upload_splits(
+    train_df: pd.DataFrame,
+    val_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    repo_id: str,
+    token: str,
+) -> None:
     """Upload train/val/test splits to HuggingFace as individual CSV files."""
     api = HfApi()
     splits = [("train", train_df), ("val", val_df), ("test", test_df)]
 
     for name, df in splits:
         print(f"Uploading {name}.csv...")
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
             df.to_csv(f, index=False)
             temp_path = f.name
 

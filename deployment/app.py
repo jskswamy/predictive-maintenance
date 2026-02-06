@@ -297,7 +297,9 @@ def main():
     st.divider()
 
     # Prediction button
-    if st.button("🔍 Predict Maintenance Status", type="primary", use_container_width=True):
+    if st.button(
+        "🔍 Predict Maintenance Status", type="primary", use_container_width=True
+    ):
         try:
             # Engineer features
             features = engineer_features(

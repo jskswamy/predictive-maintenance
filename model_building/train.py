@@ -89,7 +89,9 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> AdaBoostClassifier
     return model
 
 
-def find_optimal_threshold(model: AdaBoostClassifier, X_val: pd.DataFrame, y_val: pd.Series) -> float:
+def find_optimal_threshold(
+    model: AdaBoostClassifier, X_val: pd.DataFrame, y_val: pd.Series
+) -> float:
     """
     Find the optimal classification threshold by maximizing F2 score.
 
@@ -119,7 +121,9 @@ def find_optimal_threshold(model: AdaBoostClassifier, X_val: pd.DataFrame, y_val
     return best_threshold
 
 
-def evaluate_model(model: AdaBoostClassifier, X_test: pd.DataFrame, y_test: pd.Series, threshold: float) -> dict:
+def evaluate_model(
+    model: AdaBoostClassifier, X_test: pd.DataFrame, y_test: pd.Series, threshold: float
+) -> dict:
     """
     Evaluate model performance on test set.
 

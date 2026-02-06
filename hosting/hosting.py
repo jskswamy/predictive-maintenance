@@ -114,6 +114,7 @@ def deploy_to_spaces(deployment_dir: str, repo_id: str, token: str) -> None:
 
     # Upload README
     import tempfile
+
     with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
         f.write(SPACE_README)
         readme_path = f.name
@@ -130,7 +131,9 @@ def deploy_to_spaces(deployment_dir: str, repo_id: str, token: str) -> None:
 
     print(f"\nDeployment complete!")
     print(f"Space URL: https://huggingface.co/spaces/{repo_id}")
-    print("Note: It may take a few minutes for the Space to build and become available.")
+    print(
+        "Note: It may take a few minutes for the Space to build and become available."
+    )
 
 
 def main():
